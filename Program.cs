@@ -11,9 +11,9 @@ namespace Preparator
     {
         static void Main(string[] args)
         {
-            string inputPath = @"C:\C#work\Kontur\Kontur\Kontur.LogPacker.SelfCheck\example.log";
-            string outputPath = @"C:\C#work\Kontur\Kontur\Kontur.LogPacker.SelfCheck\compressed.log";
-            string newOutputPath = @"C:\C#work\Kontur\Kontur\Kontur.LogPacker.SelfCheck\decompressed.log";
+            string inputPath = @"C:\Users\Admin\Documents\Kontur\Kontur.LogPacker.SelfCheck\example.log";
+            string outputPath = @"C:\Users\Admin\Documents\Kontur\Kontur.LogPacker.SelfCheck\compressed.log";
+            string newOutputPath = @"C:\Users\Admin\Documents\Kontur\Kontur.LogPacker.SelfCheck\decompressed.log";
             PrepareForCompress(inputPath, outputPath);
             PrepareAfterDecompress(outputPath, newOutputPath);
         }
@@ -76,7 +76,7 @@ namespace Preparator
             }
         }
 
-        public static string CompareAndShrink(List <char> list1, List<char> list2)
+        public static string CompareAndShrink(List<char> list1, List<char> list2)
         {
             StringBuilder sb = new StringBuilder();
             StringBuilder midsb = new StringBuilder();
@@ -174,12 +174,12 @@ namespace Preparator
                 {
                     array[arrIndex] = line.Substring(startPosition, i - startPosition).ToList();
                     startPosition = i + 1;
-                    if(arrIndex < 3)arrIndex++;
+                    if (arrIndex < 3) arrIndex++;
                 }
-                if(arrIndex == 3) array[arrIndex] = line.Substring(startPosition).ToList();
+                if (arrIndex == 3) array[arrIndex] = line.Substring(startPosition).ToList();
             }
             return array;
-       }
+        }
 
         public static string CompareAndRestore(List<char> list1, List<char> list2)
         {
@@ -192,16 +192,26 @@ namespace Preparator
             for (int i = 0; i < list2.Count; i++)
             {
                 midsb.Append(list2[i]);
-                if (!flag && list2[i] != '^') sb.Append(list2[i]);
-                if (flag) numbersb.Append(list2[i]);
+                if (list2[i] == '^')
+                {
+                    if (flag) { flag = false; numbersb.Clear(); }
+                    else flag = true;
+                }
+                else
+                {
+                    if (flag) numbersb.Append(list2[i]);
+                    else sb.Append(list2[i]);
+                }
+                
                 if (numbersb.Length > 0 && i + 1 < list2.Count && list2[i + 1] == '^')
                 {
                     flag = false;
                     var length = Convert.ToInt32(numbersb.ToString(), 2);
-                    sb.Append(new string(list1.GetRange(startIndex, length).ToArray()));
+                    if(startIndex+length < list1.Count) sb.Append(new string(list1.GetRange(startIndex, length).ToArray()));
                 }
-                if (list2[i] == '^') flag = true;
 
+                
+                
                 //Convert.ToInt32("1001101", 2).ToString();
                 {
 
@@ -215,7 +225,18 @@ namespace Preparator
             return sb.ToString();
         }
 
-    }
-    }
+        public static string DecimalToBinary(int decimalNumber)
+        {
+            int remainder;
+            string result = string.Empty;
+            while (decimalNumber > 0)
+            {
+                remainder = decimalNumber % 2;
+                decimalNumber /= 2;
+                result = remainder.ToString() + result;
+            }
+            return result;
+        }
 
-
+    }
+}
