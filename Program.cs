@@ -11,9 +11,9 @@ namespace Preparator
     {
         static void Main(string[] args)
         {
-            string inputPath = @"C:\Users\Admin\Documents\Kontur\Kontur.LogPacker.SelfCheck\example.log";
-            string outputPath = @"C:\Users\Admin\Documents\Kontur\Kontur.LogPacker.SelfCheck\compressed.log";
-            string newOutputPath = @"C:\Users\Admin\Documents\Kontur\Kontur.LogPacker.SelfCheck\decompressed.log";
+            string inputPath = @"C:\C#work\Kontur\Kontur\Kontur.LogPacker.SelfCheck\example.log";
+            string outputPath = @"C:\C#work\Kontur\Kontur\Kontur.LogPacker.SelfCheck\compressed.log";
+            string newOutputPath = @"C:\C#work\Kontur\Kontur\Kontur.LogPacker.SelfCheck\decompressed.log";
             PrepareForCompress(inputPath, outputPath);
             PrepareAfterDecompress(outputPath, newOutputPath);
         }
@@ -187,41 +187,34 @@ namespace Preparator
             StringBuilder midsb = new StringBuilder();
             StringBuilder numbersb = new StringBuilder();
             var startIndex = 0;
+            var EndOfLine = false;
             var flag = false;
-            var counter = 0;
             for (int i = 0; i < list2.Count; i++)
             {
+                if (list2[i] == '\n') EndOfLine = true;
                 midsb.Append(list2[i]);
+
                 if (list2[i] == '^')
                 {
-                    if (flag) { flag = false; numbersb.Clear(); }
-                    else flag = true;
+                    if (flag)
+                    {
+                        flag = false;                      
+                        var length = Convert.ToInt32(numbersb.ToString(), 2);
+                        if (startIndex + length <= list1.Count)
+                            sb.Append(new string(list1.GetRange(startIndex, length).ToArray()));
+                        midsb.Clear();
+                        numbersb.Clear();                       
+                        continue;
+                    }
+                    else { flag = true; startIndex = i; }
                 }
                 else
                 {
                     if (flag) numbersb.Append(list2[i]);
                     else sb.Append(list2[i]);
                 }
-                
-                if (numbersb.Length > 0 && i + 1 < list2.Count && list2[i + 1] == '^')
-                {
-                    flag = false;
-                    var length = Convert.ToInt32(numbersb.ToString(), 2);
-                    if(startIndex+length < list1.Count) sb.Append(new string(list1.GetRange(startIndex, length).ToArray()));
-                }
-
-                
-                
-                //Convert.ToInt32("1001101", 2).ToString();
-                {
-
-                    counter = 0;
-                    midsb.Clear();
-                }
             }
-            midsb.Append('\r');
-            sb.Append(midsb);
-            midsb.Clear();
+            if (!EndOfLine) sb.Append('\r');
             return sb.ToString();
         }
 
