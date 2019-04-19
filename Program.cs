@@ -33,7 +33,7 @@ namespace Preparator
                 {
                     if ((char)reader.Peek() == '\n') flag = true;
                     sb.Append((char)reader.Read());
-                    if (flag)
+                    if (flag || reader.Peek() == -1)
                     {
                         if (counter % 12 == 0)
                         {
@@ -120,7 +120,7 @@ namespace Preparator
                 {
                     if ((char)reader.Peek() == '\n') flag = true;
                     sb.Append((char)reader.Read());
-                    if (flag)
+                    if (flag || reader.Peek() == -1)
                     {
                         if (counter % 12 == 0)
                         {
@@ -155,8 +155,8 @@ namespace Preparator
                         }
                         writer.Write(resultsb.ToString());
                         counter++;
-                        resultsb.Clear();
-                        sb.Clear();
+                            resultsb.Clear();
+                            sb.Clear();
                         flag = false;
                     }
                 }
