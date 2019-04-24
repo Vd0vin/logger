@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Linq;
+using System.Globalization;
 
 namespace Preparator
 {
@@ -24,6 +25,7 @@ namespace Preparator
             var flag = false;
             var line1 = "";
             var line2 = "";
+            var endOfLine = false;
             StringBuilder sb = new StringBuilder();
             StringBuilder resultsb = new StringBuilder();
             using (StreamReader reader = new StreamReader(File.Open(inputPath, FileMode.Open)))
@@ -37,12 +39,12 @@ namespace Preparator
                     {
                         if (counter % 12 == 0)
                         {
-                            line1 = sb.ToString();
+                            if (CheckDateFormat(sb.ToString(0, 24))) line1 = sb.ToString(); 
                             resultsb.Append(sb);
                         }
                         else
                         {
-                            line2 = sb.ToString();
+                            if (CheckDateFormat(sb.ToString(0, 24))) line2 = sb.ToString();
 
                             var list1 = line1.Substring(0, 24).ToList();
                             var list2 = line2.Substring(0, 24).ToList();
@@ -86,22 +88,22 @@ namespace Preparator
             {
                 midsb.Append(list2[i]);
                 if (list1[i] == list2[i]) counter++;
-                if (list1[i] != list2[i] && counter > 4 || (counter > 4 && minList.Count - 1 == i))
+                if (counter > 4 && (list1[i] != list2[i] || minList.Count - 1 == i))
                 {
                     {
                         sb.Append('^');
                         sb.Append(Convert.ToString(counter, 2));
                         sb.Append('^');
-                        sb.Append(list2[i]);
+                        if (list1[i] != list2[i]) sb.Append(list2[i]);
                         counter = 0;
                         midsb.Clear();
                     }
                 }
             }
-            midsb.Append('\r');
             sb.Append(midsb);
             midsb.Clear();
             if (minList.Count < list2.Count) sb.Append(list2.GetRange(list1.Count, list2.Count - list1.Count).ToArray());
+            sb.Append('\r');
             return sb.ToString();
         }
 
@@ -155,8 +157,8 @@ namespace Preparator
                         }
                         writer.Write(resultsb.ToString());
                         counter++;
-                            resultsb.Clear();
-                            sb.Clear();
+                        resultsb.Clear();
+                        sb.Clear();
                         flag = false;
                     }
                 }
@@ -166,18 +168,28 @@ namespace Preparator
         public static List<char>[] ParseLine(string line)
         {
             var array = new List<char>[4];
-            var startPosition = 0;
-            var arrIndex = 0;
-            for (int i = 0; i < line.Length; i++)
+            char[] charSeparators = new char[] { '\r' };
+            var arr = line.Split(charSeparators, StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0; i < arr.Count(); i++)
             {
-                if (line[i] == '\r')
-                {
-                    array[arrIndex] = line.Substring(startPosition, i - startPosition).ToList();
-                    startPosition = i + 1;
-                    if (arrIndex < 3) arrIndex++;
-                }
-                if (arrIndex == 3) array[arrIndex] = line.Substring(startPosition).ToList();
+                var stringForList = arr[i].TrimEnd('\r');
+                array[i] = stringForList.ToList();
             }
+
+            //var startPosition = 0;
+            //var arrIndex = 0;
+            //var length = 0;
+            //for (int i = 0; i + 1 < line.Length; i++)
+            //{
+            //    length = i - startPosition;
+            //    if (line[i + 1] == '$')
+            //    {
+            //        array[arrIndex] = line.Substring(startPosition, length).ToList();
+            //        if(line.Length >= startPosition + length) startPosition += length;
+            //        if (arrIndex < 3) arrIndex++;
+            //    }
+            //    if (arrIndex == 3) array[arrIndex] = line.Substring(startPosition).ToList();
+            //}
             return array;
         }
 
@@ -187,23 +199,21 @@ namespace Preparator
             StringBuilder midsb = new StringBuilder();
             StringBuilder numbersb = new StringBuilder();
             var startIndex = 0;
-            var EndOfLine = false;
             var flag = false;
             for (int i = 0; i < list2.Count; i++)
             {
-                if (list2[i] == '\n') EndOfLine = true;
                 midsb.Append(list2[i]);
 
                 if (list2[i] == '^')
                 {
                     if (flag)
                     {
-                        flag = false;                      
+                        flag = false;
                         var length = Convert.ToInt32(numbersb.ToString(), 2);
                         if (startIndex + length <= list1.Count)
                             sb.Append(new string(list1.GetRange(startIndex, length).ToArray()));
                         midsb.Clear();
-                        numbersb.Clear();                       
+                        numbersb.Clear();
                         continue;
                     }
                     else { flag = true; startIndex = i; }
@@ -214,21 +224,18 @@ namespace Preparator
                     else sb.Append(list2[i]);
                 }
             }
-            if (!EndOfLine) sb.Append('\r');
+            //if (!EndOfLine) sb.Append('$');// \r
             return sb.ToString();
         }
 
-        public static string DecimalToBinary(int decimalNumber)
+        public static bool CheckDateFormat(string s)
         {
-            int remainder;
-            string result = string.Empty;
-            while (decimalNumber > 0)
-            {
-                remainder = decimalNumber % 2;
-                decimalNumber /= 2;
-                result = remainder.ToString() + result;
-            }
-            return result;
+            var dateSubstring = s.Length >= 24 ? s.Substring(0, 24) : "";
+            DateTime dt;
+            var format = "yyyy-MM-dd HH:mm:ss,fff ";
+            return DateTime.TryParseExact(dateSubstring, format,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None, out dt);
         }
 
     }
