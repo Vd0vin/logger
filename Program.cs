@@ -16,7 +16,7 @@ namespace Preparator
             string outputPath = @"C:\C#work\Kontur\Kontur\Kontur.LogPacker.SelfCheck\compressed.log";
             string newOutputPath = @"C:\C#work\Kontur\Kontur\Kontur.LogPacker.SelfCheck\decompressed.log";
             PrepareForCompress(inputPath, outputPath);
-            PrepareAfterDecompress(outputPath, newOutputPath);
+            //PrepareAfterDecompress(outputPath, newOutputPath);
         }
 
         public static void PrepareForCompress(string inputPath, string outputPath)
@@ -26,26 +26,42 @@ namespace Preparator
             var line1 = "";
             var line2 = "";
             var endOfLine = false;
+            StringBuilder fullLineSb = new StringBuilder();
             StringBuilder sb = new StringBuilder();
             StringBuilder resultsb = new StringBuilder();
             using (StreamReader reader = new StreamReader(File.Open(inputPath, FileMode.Open)))
             using (StreamWriter writer = new StreamWriter(File.Open(outputPath, FileMode.Create)))
             {
-                while (reader.Peek() != -1)
+                while (reader.Peek() > -1)
                 {
                     if ((char)reader.Peek() == '\n') flag = true;
                     sb.Append((char)reader.Read());
-                    if (flag || reader.Peek() == -1)
+                    if (flag || reader.Peek() < 1)
                     {
                         if (counter % 12 == 0)
                         {
-                            if (CheckDateFormat(sb.ToString(0, 24))) line1 = sb.ToString(); 
-                            resultsb.Append(sb);
+                            if (CheckDateFormat(sb.ToString(0, 24)))
+                            {
+                                if (fullLineSb.Length > 0)
+                                {
+                                    line1 = fullLineSb.ToString(); counter++;
+                                    resultsb.Append(fullLineSb);
+                                    fullLineSb.Clear();
+                                }
+                            }
+                            fullLineSb.Append(sb);
                         }
                         else
                         {
-                            if (CheckDateFormat(sb.ToString(0, 24))) line2 = sb.ToString();
-
+                            if (CheckDateFormat(sb.ToString(0, 24)))
+                            {
+                                if (fullLineSb.Length > 0)
+                                {
+                                    line2 = fullLineSb.ToString(); counter++;
+                                    fullLineSb.Clear();
+                                }     
+                            }
+                            fullLineSb.Append(sb);
                             var list1 = line1.Substring(0, 24).ToList();
                             var list2 = line2.Substring(0, 24).ToList();
                             var list3 = line1.Substring(24, 7).ToList();
@@ -67,14 +83,15 @@ namespace Preparator
                             //var mid4 = CompareAndShrink(list7, list8);
                             //resultsb.Append(mid4);
                             resultsb.Append(CompareAndShrink(list7, list8));
+
                         }
                         writer.Write(resultsb.ToString());
-                        counter++;
                         resultsb.Clear();
                         sb.Clear();
                         flag = false;
                     }
                 }
+                if (fullLineSb.Length > 0) { writer.Write(fullLineSb.ToString()); fullLineSb.Clear(); }
             }
         }
 
@@ -88,6 +105,7 @@ namespace Preparator
             {
                 midsb.Append(list2[i]);
                 if (list1[i] == list2[i]) counter++;
+                if (list1[i] != list2[i] && counter < 5) counter = 0;
                 if (counter > 4 && (list1[i] != list2[i] || minList.Count - 1 == i))
                 {
                     {
@@ -103,7 +121,7 @@ namespace Preparator
             sb.Append(midsb);
             midsb.Clear();
             if (minList.Count < list2.Count) sb.Append(list2.GetRange(list1.Count, list2.Count - list1.Count).ToArray());
-            sb.Append('\r');
+            sb.Append('$');
             return sb.ToString();
         }
 
@@ -168,11 +186,11 @@ namespace Preparator
         public static List<char>[] ParseLine(string line)
         {
             var array = new List<char>[4];
-            char[] charSeparators = new char[] { '\r' };
+            char[] charSeparators = new char[] { '$' };
             var arr = line.Split(charSeparators, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < arr.Count(); i++)
             {
-                var stringForList = arr[i].TrimEnd('\r');
+                var stringForList = arr[i].TrimEnd('$');
                 array[i] = stringForList.ToList();
             }
 
@@ -224,7 +242,7 @@ namespace Preparator
                     else sb.Append(list2[i]);
                 }
             }
-            //if (!EndOfLine) sb.Append('$');// \r
+            //if (!EndOfLine) sb.Append('$');// $
             return sb.ToString();
         }
 
