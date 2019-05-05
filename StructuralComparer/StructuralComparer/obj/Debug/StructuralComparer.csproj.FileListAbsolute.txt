@@ -1,0 +1,7 @@
+C:\Users\Admin\source\repos\StructuralComparer\StructuralComparer\bin\Debug\StructuralComparer.exe.config
+C:\Users\Admin\source\repos\StructuralComparer\StructuralComparer\bin\Debug\StructuralComparer.exe
+C:\Users\Admin\source\repos\StructuralComparer\StructuralComparer\bin\Debug\StructuralComparer.pdb
+C:\Users\Admin\source\repos\StructuralComparer\StructuralComparer\obj\Debug\StructuralComparer.csprojAssemblyReference.cache
+C:\Users\Admin\source\repos\StructuralComparer\StructuralComparer\obj\Debug\StructuralComparer.csproj.CoreCompileInputs.cache
+C:\Users\Admin\source\repos\StructuralComparer\StructuralComparer\obj\Debug\StructuralComparer.exe
+C:\Users\Admin\source\repos\StructuralComparer\StructuralComparer\obj\Debug\StructuralComparer.pdb

@@ -1,0 +1,7 @@
+C:\Users\Admin\source\repos\ErsatsExample\ErsatsExample\bin\Debug\ErsatsExample.exe.config
+C:\Users\Admin\source\repos\ErsatsExample\ErsatsExample\bin\Debug\ErsatsExample.exe
+C:\Users\Admin\source\repos\ErsatsExample\ErsatsExample\bin\Debug\ErsatsExample.pdb
+C:\Users\Admin\source\repos\ErsatsExample\ErsatsExample\obj\Debug\ErsatsExample.csprojAssemblyReference.cache
+C:\Users\Admin\source\repos\ErsatsExample\ErsatsExample\obj\Debug\ErsatsExample.csproj.CoreCompileInputs.cache
+C:\Users\Admin\source\repos\ErsatsExample\ErsatsExample\obj\Debug\ErsatsExample.exe
+C:\Users\Admin\source\repos\ErsatsExample\ErsatsExample\obj\Debug\ErsatsExample.pdb
