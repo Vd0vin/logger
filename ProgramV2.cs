@@ -13,9 +13,9 @@ namespace Preparator
     {
         static void Main(string[] args)
         {
-            string inputPath = @"C:\C#work\Kontur\Kontur\Kontur.LogPacker.SelfCheck\exampleShort.log";
-            string outputPath = @"C:\C#work\Kontur\Kontur\Kontur.LogPacker.SelfCheck\compressed.log";
-            string newOutputPath = @"C:\C#work\Kontur\Kontur\Kontur.LogPacker.SelfCheck\decompressed.log";
+            string inputPath = @"C:\Users\Admin\Documents\Kontur\Kontur.LogPacker.SelfCheck\example.log";
+            string outputPath = @"C:\Users\Admin\Documents\Kontur\Kontur.LogPacker.SelfCheck\compressed.log";
+            string newOutputPath = @"C:\Users\Admin\Documents\Kontur\Kontur.LogPacker.SelfCheck\decompressed.log";
             PrepareForCompress(inputPath, outputPath);
             PrepareAfterDecompress(outputPath, newOutputPath);
         }
@@ -36,12 +36,12 @@ namespace Preparator
                 {
                     while (reader.Peek() > -1)
                     {
-                        charArray = new char[200];
+                        charArray = new char[1024];
                         reader.Read(charArray, 0, charArray.Length);
                         for (int i = 0; i < charArray.Length; i++)
                         {
                             sb.Append(charArray[i]);
-                            if (charArray[i] == '\n')flag = true;
+                            if (charArray[i] == '\n') flag = true;
 
                             if (flag)
                             {
@@ -151,7 +151,7 @@ namespace Preparator
             for (int i = 0; i < list1.Length; i++)
             {
                 if (char.IsDigit(list1[i])) number1.Append(list1[i]);
-                else break;           
+                else break;
             }
 
             for (int i = 0; i < list2.Length; i++)
@@ -161,7 +161,7 @@ namespace Preparator
             }
             var difference = int.Parse(number2.ToString()) - int.Parse(number1.ToString());
             result.Append(difference);
-            if(number2.Length < 6) result.Append(' ', 6 - number2.Length);
+            if (number2.Length < 6) result.Append(' ', 6 - number2.Length);
             result.Append(" $");
             return result.ToString();
         }
@@ -183,14 +183,22 @@ namespace Preparator
                 {
                     while (reader.Peek() != -1)
                     {
-                        charArray = new char[200];
+                        charArray = new char[1024];
                         reader.Read(charArray, 0, charArray.Length);
                         for (int i = 0; i < charArray.Length; i++)
                         {
-                            sb.Append(charArray[i]);
-                            if (i < charArray.Length-1 && charArray[i] == '\n' && charArray[i+1] == '$') flag = true;
-
-                            if (flag || reader.Peek() == -1)
+                            if (charArray[i] == '\0') { writer.Write(sb.ToString()); break; }
+                            if (charArray[i] == '\n') preflag = true;
+                            if (preflag && charArray[i] == '$')
+                            {
+                                flag = true;
+                            }
+                            else
+                            {
+                                sb.Append(charArray[i]);
+                                flag = false;
+                            }
+                            if (flag)
                             {
                                 if (counter % 12 == 0)
                                 {
@@ -204,8 +212,9 @@ namespace Preparator
                                     if (array.Length < 3)
                                     {
                                         foreach (var item in array)
-                                            foreach (var subitem in item)
-                                                resultsb.Append(subitem);
+                                            resultsb.Append(item);
+                                        //foreach (var subitem in item)
+                                        //resultsb.Append(subitem);
                                     }
                                     else
                                     {
@@ -253,20 +262,6 @@ namespace Preparator
                 array[i] = stringForList;
             }
 
-            //var startPosition = 0;
-            //var arrIndex = 0;
-            //var length = 0;
-            //for (int i = 0; i + 1 < line.Length; i++)
-            //{
-            //    length = i - startPosition;
-            //    if (line[i + 1] == '$')
-            //    {
-            //        array[arrIndex] = line.Substring(startPosition, length).ToList();
-            //        if(line.Length >= startPosition + length) startPosition += length;
-            //        if (arrIndex < 3) arrIndex++;
-            //    }
-            //    if (arrIndex == 3) array[arrIndex] = line.Substring(startPosition).ToList();
-            //}
             return array;
         }
 
@@ -323,7 +318,7 @@ namespace Preparator
         public static string ParseNumber(string line) // helps determine length of number part
         {
             StringBuilder result = new StringBuilder();
-            var lengthLimit = line.Length > 44 ? 20 : line.Length-24;
+            var lengthLimit = line.Length > 44 ? 20 : line.Length - 24;
             var numberChunk = line.Substring(24, lengthLimit);
             for (int i = 0; i < lengthLimit; i++)
             {
@@ -360,7 +355,6 @@ namespace Preparator
             result.Append(' ');
             return result.ToString();
         }
-
 
     }
 }
