@@ -13,9 +13,9 @@ namespace Preparator
     {
         static void Main(string[] args)
         {
-            string inputPath = @"C:\Users\Admin\Documents\Kontur\Kontur.LogPacker.SelfCheck\example.log";
-            string outputPath = @"C:\Users\Admin\Documents\Kontur\Kontur.LogPacker.SelfCheck\compressed.log";
-            string newOutputPath = @"C:\Users\Admin\Documents\Kontur\Kontur.LogPacker.SelfCheck\decompressed.log";
+            string inputPath = @"D:\Kontur\Kontur\Kontur.LogPacker.SelfCheck\example.log";
+            string outputPath = @"D:\Kontur\Kontur\Kontur.LogPacker.SelfCheck\compressed.log";
+            string newOutputPath = @"D:\Kontur\Kontur\Kontur.LogPacker.SelfCheck\decompressed.log";
             PrepareForCompress(inputPath, outputPath);
             PrepareAfterDecompress(outputPath, newOutputPath);
         }
@@ -138,7 +138,7 @@ namespace Preparator
             }
             sb.Append(midsb);
             midsb.Clear();
-            if (minList.Length < list2.Length) sb.Append(list2.Substring(list1.Length, list2.Length - list1.Length).ToArray());
+            if (minList.Length < list2.Length) sb.Append(list2.Substring(list1.Length, list2.Length - list1.Length));
             sb.Append('$');
             return sb.ToString();
         }
@@ -187,7 +187,7 @@ namespace Preparator
                         reader.Read(charArray, 0, charArray.Length);
                         for (int i = 0; i < charArray.Length; i++)
                         {
-                            if (charArray[i] == '\0') { writer.Write(sb.ToString()); break; }
+                            if (charArray[i] == '\0') break; 
                             if (charArray[i] == '\n') preflag = true;
                             if (preflag && charArray[i] == '$')
                             {
@@ -238,14 +238,22 @@ namespace Preparator
                                         //resultsb.Append(mid4);
                                     }
                                 }
-                                writer.Write(resultsb.ToString());
+                                if (resultsb.Length >= 200)
+                                {
+                                    writer.Write(resultsb.ToString());
+                                    resultsb.Clear();
+                                }
                                 counter++;
-                                resultsb.Clear();
                                 sb.Clear();
                                 flag = false;
                                 preflag = false;
                             }
                         }
+                    }
+                    if (resultsb.Length > 0 || sb.Length > 0)
+                    {
+                        resultsb.Append(sb);
+                        writer.Write(resultsb.ToString());
                     }
                 }
             }
@@ -256,12 +264,11 @@ namespace Preparator
             var arr = line.Split(new char[] { '$' }, StringSplitOptions.RemoveEmptyEntries);
             var array = new string[arr.Length];
 
-            for (int i = 0; i < arr.Count(); i++)
+            for (int i = 0; i < arr.Length; i++)
             {
                 var stringForList = arr[i].TrimEnd('$');
                 array[i] = stringForList;
             }
-
             return array;
         }
 
@@ -282,12 +289,10 @@ namespace Preparator
                     if (flag)
                     {
                         flag = false;
-                        //var length = Convert.ToInt32(numbersb.ToString(), 2);
                         var length = Convert.ToInt32(numbersb.ToString());
                         if (startIndex + length <= list1.Length)
                         {
-                            sb.Append(new string(list1.Substring(startIndex, length).ToArray()));
-                            //new and useless
+                            sb.Append(list1.Substring(startIndex, length));
                         }
                         midsb.Clear();
                         numbersb.Clear();
@@ -301,7 +306,6 @@ namespace Preparator
                     else sb.Append(list2[i]);
                 }
             }
-            //if (!EndOfLine) sb.Append('$');// $
             return sb.ToString();
         }
 
