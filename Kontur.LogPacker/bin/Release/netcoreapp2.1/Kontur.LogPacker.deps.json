@@ -1,0 +1,47 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v2.1",
+    "signature": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v2.1": {
+      "Kontur.LogPacker/1.0.0": {
+        "dependencies": {
+          "Kontur.LogPacker.SelfCheck": "1.0.0",
+          "Kontur.LogPackerGZip": "1.0.0"
+        },
+        "runtime": {
+          "Kontur.LogPacker.dll": {}
+        }
+      },
+      "Kontur.LogPacker.SelfCheck/1.0.0": {
+        "runtime": {
+          "Kontur.LogPacker.SelfCheck.dll": {}
+        }
+      },
+      "Kontur.LogPackerGZip/1.0.0": {
+        "runtime": {
+          "Kontur.LogPackerGZip.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Kontur.LogPacker/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Kontur.LogPacker.SelfCheck/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Kontur.LogPackerGZip/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

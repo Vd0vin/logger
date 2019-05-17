@@ -1,0 +1,12 @@
+2018-11-13 00:02:40,574 76     INFO  Configured ThreadPool: 1024/32767 workers, 1024/32767 IOCP (min/max).
+^10010^1,315 $816    $^110^$[BackgroundDaemon] Starting iteration #15434.
+$^10010^1,330 $831    $^110^$[0de1db] Started processing user request. Id = 0de1dbfb-fddb-40b5-b34b-7a7beb43a33f. Size = 2.83 KB.
+$^10010^1,344 $845    $^110^$[0de1db] Doing some complicated stuff.. Random numbers are: 1192743271, 187325574, 168764164.
+$^10010^1,345 $846    $^110^$[3a61cc] Started processing user request. Id = 3a61cc3f-2ee9-4738-8283-efc073235ec8. Size = 67.46 KB.
+$^10010^1,354 $855    $^110^$[3a61cc] Doing some complicated stuff.. Random numbers are: 905206199, 2002603058, 533352593.
+$^10010^1,373 $875    $^110^$[0de1db] Finished processing user request with id = 0de1dbfb-fddb-40b5-b34b-7a7beb43a33f in 00:00:00.0442952.
+$^10010^1,383 $884    $^110^$[BackgroundDaemon] Processing data (10% completed)..
+$^10010^1,387 $888    $^110^$[dfad50] Started processing user request. Id = dfad50dd-17ad-4ad3-b75b-c992ee1f1f1a. Size = 37.68 KB.
+$^10010^1,394 $895    $^110^$[dfad50] Doing some complicated stuff.. Random numbers are: 551704423, 1141562255, 1240276331.
+$^10010^1,399 $900    $^110^$[3a61cc] Finished processing user request with id = 3a61cc3f-2ee9-4738-8283-efc073235ec8 in 00:00:00.0536137.
+$^10010^1,431 $932    $^110^$[8c2d7d] Started processing user request. Id = 8c2d7d0d-ea36-45a2-b915-b9b188139594. Size = 73.61 KB.$
